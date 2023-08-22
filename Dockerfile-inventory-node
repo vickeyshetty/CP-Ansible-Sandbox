@@ -1,0 +1,27 @@
+FROM ubuntu:20.04
+
+# Disable frontend dialogs while installing packages
+ENV DEBIAN_FRONTEND=non-interactive
+
+# Install SSH server
+RUN apt update \
+    && apt install -y openssh-server \
+    && mkdir /var/run/sshd
+
+# Set root password
+RUN echo 'root:root' | chpasswd
+
+# Add a new user 'admin'
+RUN useradd -rm -d /home/admin -s /bin/bash -g root -G sudo -u 1000 admin
+
+# Set password for the 'admin' user
+RUN echo 'admin:admin' | chpasswd
+
+# Start SSH service
+RUN service ssh start
+
+# Expose SSH port
+EXPOSE 22
+
+# Run SSH service in the background and keep the container running
+CMD [ "sh", "-c", "service ssh start; sleep infinity" ]

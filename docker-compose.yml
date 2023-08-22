@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  ansible-control:
+    build:
+      context: . 
+      dockerfile: Dockerfile
+    volumes:
+      - ./cp-ansible:/ansible/ansible_collections/confluent/platform:rw
+      - ./inventories:/ansible/ansible_collections/confluent/platform/inventories
+    environment:
+      - ANSIBLE_GATHERING=smart
+      - ANSIBLE_HOST_KEY_CHECKING=False
+      - ANSIBLE_RETRY_FILES_ENABLED=False
+      - ANSIBLE_COLLECTIONS_PATH=/ansible/ansible_collections
+      - ANSIBLE_SSH_PIPELINING=True
+      - ANSIBLE_INVENTORY=/ansible/ansible_collections/confluent/platform/inventories/ansible-inventory.yml
+  ubuntu1:
+    build:
+      context: ./  # This is the directory where your Dockerfile-inventory-node resides
+      dockerfile: Dockerfile-inventory-node  # This is the name of your Dockerfile
+    ports:
+      - "2222:22"
+    environment:
+      - DEBIAN_FRONTEND=non-interactive      
