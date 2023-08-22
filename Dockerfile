@@ -37,6 +37,10 @@ RUN mkdir ~/.ssh
 RUN echo "host *" >> ~/.ssh/config && \
     echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
+# Generate SSH key
+RUN ssh-keygen -t rsa -f /root/.ssh/id_rsa -N ''
+
+
 # Create playbook directory
 RUN mkdir -p /ansible/ansible_collections/confluent/platform
 

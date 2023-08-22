@@ -8,6 +8,7 @@ services:
     volumes:
       - ./cp-ansible:/ansible/ansible_collections/confluent/platform:rw
       - ./inventories:/ansible/ansible_collections/confluent/platform/inventories
+      - ./share:/usr/share/cp-ansible-sandbox 
     environment:
       - ANSIBLE_GATHERING=smart
       - ANSIBLE_HOST_KEY_CHECKING=False
@@ -21,5 +22,7 @@ services:
       dockerfile: Dockerfile-inventory-node  # This is the name of your Dockerfile
     ports:
       - "2222:22"
+    volumes:
+      - ./share:/usr/share/cp-ansible-sandbox  
     environment:
       - DEBIAN_FRONTEND=non-interactive      

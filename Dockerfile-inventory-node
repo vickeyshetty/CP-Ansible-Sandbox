@@ -17,6 +17,10 @@ RUN useradd -rm -d /home/admin -s /bin/bash -g root -G sudo -u 1000 admin
 # Set password for the 'admin' user
 RUN echo 'admin:admin' | chpasswd
 
+# Create .ssh directory and authorized_keys file for root and admin
+RUN mkdir -p /root/.ssh /home/admin/.ssh \
+    && touch /root/.ssh/authorized_keys /home/admin/.ssh/authorized_keys
+
 # Start SSH service
 RUN service ssh start
 
