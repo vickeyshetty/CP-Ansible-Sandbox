@@ -1,11 +1,11 @@
-FROM ubuntu:20.04
+FROM jrei/systemd-ubuntu:20.04
 
 # Disable frontend dialogs while installing packages
 ENV DEBIAN_FRONTEND=non-interactive
 
 # Install SSH server
 RUN apt update \
-    && apt install -y openssh-server \
+    && apt install -y openssh-server sudo \
     && mkdir /var/run/sshd
 
 # Set root password
@@ -28,4 +28,6 @@ RUN service ssh start
 EXPOSE 22
 
 # Run SSH service in the background and keep the container running
-CMD [ "sh", "-c", "service ssh start; sleep infinity" ]
+# CMD [ "sh", "-c", "service ssh start; sleep infinity" ]
+
+CMD ["/lib/systemd/systemd"]

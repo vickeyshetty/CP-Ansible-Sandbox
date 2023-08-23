@@ -52,12 +52,13 @@ ENV ANSIBLE_HOST_KEY_CHECKING False
 ENV ANSIBLE_RETRY_FILES_ENABLED False
 ENV ANSIBLE_COLLECTIONS_PATH /ansible/ansible_collections
 ENV ANSIBLE_SSH_PIPELINING True
+ENV ANSIBLE_HASH_BEHAVIOUR merge
 ENV PATH /ansible/bin:$PATH
 ENV PYTHONPATH /ansible/lib
 ENV ANSIBLE_INVENTORY /ansible/ansible_collections/confluent/platform/inventories/ansible-inventory.yml
 
 # Install required Ansible modules afer container comes up. Possibly in entrypoint or comamnd
-# RUN ansible-galaxy collection install ansible.posix
+RUN ansible-galaxy collection install ansible.posix community.general
 
 # Set entry point
 CMD ["sh", "-c", "sleep infinity"]
