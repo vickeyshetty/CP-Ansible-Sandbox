@@ -49,6 +49,10 @@ The inventory files in `inventories` is mounted to `/ansible/inventories/` on th
 ansible-playbook -i /ansible/inventories/custom-inventory.yml confluent.platform.all
 ```
 
+### Additional files
+
+Add additional files to the ansible control node by placing them in the `share` directory locally. These will be available in `/usr/share/cp-ansible-sandbox` in the ansible control node
+
 ### Accessing the control center
 
 Port 9021 is exposed locally as 9021 for the `control-center` container. If control-center is installed in the `control-center` container, it can be accessed locally in localhost:9021
