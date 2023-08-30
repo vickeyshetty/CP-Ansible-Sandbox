@@ -5,6 +5,11 @@ docker-compose environment to run cp-ansible in a docker environment with system
 ## Getting Started
 
 ```sh
+# Clone using SSH
+git clone git@github.com:Platformatory/cp-ansible-sandbox.git
+```
+
+```sh
 # This is run only once after cloning the repo
 git submodule update --init --recursive
 
@@ -25,7 +30,7 @@ docker compose ps -a
 ### Access the ansible control node
 
 ```sh
-docker compos exec -it ansible-control bash
+docker compose exec -it ansible-control bash
 
 # Inside the ansible control node, verify ssh connectivity with other nodes
 ssh root@zookeeper1
