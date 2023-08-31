@@ -103,6 +103,7 @@ services:
       - "2225:22"
     volumes:
       - ./share:/usr/share/cp-ansible-sandbox
+      - ./certs:/var/ssl/private
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     tmpfs:
       - /run/lock
@@ -187,6 +188,44 @@ services:
     tmpfs:
       - /run/lock
       - /run
-      - /tmp
+      - /tmp:exec,mode=777
     environment:
       - DEBIAN_FRONTEND=non-interactive
+
+  kafka-lag-exporter:
+    image: seglo/kafka-lag-exporter:0.8.2
+    container_name: kafka-lag-exporter
+    ports:
+      - "8000:8000"
+    environment:
+      KAFKA_LAG_EXPORTER_LOG_LEVEL: INFO
+      KAFKA_LAG_EXPORTER_KAFKA_LOG_LEVEL: INFO
+      ROOT_LOG_LEVEL: INFO
+    volumes:
+      - ./kafka-lag-exporter:/opt/docker/conf
+      - ./certs:/opt/kafka/certs
+    command: "/opt/docker/bin/kafka-lag-exporter -Dconfig.file=/opt/docker/conf/application.conf -Dlogback.configurationFile=/opt/docker/conf/logback.xml"
+  
+  grafana:
+    image: "grafana/grafana"
+    ports:
+     - "3000:3000"
+    environment:
+      GF_PATHS_DATA: /var/lib/grafana
+      GF_SECURITY_ADMIN_PASSWORD: kafka
+    container_name: grafana
+    depends_on:
+     - prometheus
+    volumes:
+      - ./grafana:/etc/grafana/provisioning
+
+  prometheus:
+    image: "prom/prometheus"
+    ports:
+     - "9090:9090"
+    depends_on:
+     - kafka-lag-exporter
+    volumes:
+     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    command: "--config.file=/etc/prometheus/prometheus.yml"     
+    container_name: prometheus

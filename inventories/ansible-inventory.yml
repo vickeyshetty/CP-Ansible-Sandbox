@@ -72,7 +72,7 @@ all:
     ## Set Component custom properties if any
     zookeeper_custom_properties:
       initLimit: 6
-      syncLimit: 3
+      syncLimit: 4
       ssl.quorum.hostnameVerification: false
       # ssl.hostnameVerification: false
     kafka_broker_custom_properties:
