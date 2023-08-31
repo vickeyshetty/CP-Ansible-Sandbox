@@ -58,7 +58,7 @@ ENV PYTHONPATH /ansible/lib
 ENV ANSIBLE_INVENTORY /ansible/ansible_collections/confluent/platform/inventories/ansible-inventory.yml
 
 # Install required Ansible modules afer container comes up. Possibly in entrypoint or comamnd
-RUN ansible-galaxy collection install ansible.posix community.general
+RUN ansible-galaxy collection install ansible.posix community.general community.crypto
 
 # Set entry point
 CMD ["sh", "-c", "sleep infinity"]

@@ -1,0 +1,10 @@
+dn: uid=barnie,ou=users,{{ LDAP_BASE_DN }}
+objectClass: inetOrgPerson
+objectClass: sambaSamAccount
+sambaSID: 10002
+uid: barnie
+sn: Rubble
+givenName: Barnie
+cn: barnie
+displayName: Barnie Rubble
+userPassword: barnie-secret

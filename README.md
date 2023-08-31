@@ -25,7 +25,7 @@ docker compose ps -a
 ### Access the ansible control node
 
 ```sh
-docker compos exec -it ansible-control bash
+docker compose exec -it ansible-control bash
 
 # Inside the ansible control node, verify ssh connectivity with other nodes
 ssh root@zookeeper1

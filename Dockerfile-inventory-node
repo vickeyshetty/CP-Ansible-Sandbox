@@ -27,6 +27,15 @@ RUN service ssh start
 # Expose SSH port
 EXPOSE 22
 
+# Install utility tools
+RUN apt-get install -y vim net-tools netcat less
+
+# Create the /tmp directory if it doesn't exist
+RUN mkdir -p /tmp
+
+# Add the exec option to the /tmp mount in /etc/fstab
+RUN echo "tmpfs /tmp tmpfs rw,nosuid,nodev,noexec,relatime 0 0" >> /etc/fstab
+
 # Run SSH service in the background and keep the container running
 # CMD [ "sh", "-c", "service ssh start; sleep infinity" ]
 

@@ -1,0 +1,14 @@
+# List ansible collections installed
+ansible-galaxy collection list
+
+# Verify SSH connectivity to all the hosts in the inventory
+ansible -i ansible-inventory.yml all -m ping
+
+# Install only Zookeeper components
+ansible-playbook -i ansible-inventory.yml confluent.platform.all --tags zookeeper
+
+# Install only Kafka broker components
+ansible-playbook -i ansible-inventory.yml confluent.platform.all --tags kafka_broker
+
+# Install only control center components
+ansible-playbook -i ansible-inventory.yml confluent.platform.all --tags control_center
