@@ -169,7 +169,7 @@ services:
     tmpfs:
       - /run/lock
       - /run
-      - /tmp
+      - /tmp:exec,mode=777
     environment:
       - DEBIAN_FRONTEND=non-interactive
     networks:
