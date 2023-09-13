@@ -38,14 +38,14 @@ all:
         ssl_mutual_auth_enabled: false
         sasl_protocol: plain
 
-    #jmxexporter_enabled: true
-    #rbac_enabled: true
+    jmxexporter_enabled: true
+    rbac_enabled: true
 
     ## LDAP Users
-    #mds_super_user: mds
-    #mds_super_user_password: mds
-    #kafka_broker_ldap_user: mds
-    #kafka_broker_ldap_password: mds
+    mds_super_user: mds
+    mds_super_user_password: mds
+    kafka_broker_ldap_user: mds
+    kafka_broker_ldap_password: mds
     #schema_registry_ldap_user: schemaregistryUser
     #schema_registry_ldap_password: schemaregistryUser
     # kafka_connect_ldap_user: connectAdmin
@@ -54,14 +54,14 @@ all:
     # ksql_ldap_password: <Your KSQL user's password in LDAP>
     # kafka_rest_ldap_user: <Your REST Proxy's username in LDAP>
     # kafka_rest_ldap_password: <Your REST Proxy's password in LDAP>
-    #control_center_ldap_user: controlcenterAdmin
-    #control_center_ldap_password: controlcenterAdmin
+    control_center_ldap_user: controlcenterAdmin
+    control_center_ldap_password: controlcenterAdmin
 
-    #rbac_component_additional_system_admins:
-    #  - User:superUser
-    #  - User:alice
+    rbac_component_additional_system_admins:
+      - User:superUser
+      - User:alice
 
-    #create_mds_certs: true
+    create_mds_certs: true
     # token_services_public_pem_file: /home/ashwin/Training/certs/public.pem
     # token_services_private_pem_file: /home/ashwin/Training/certs/private.pem
 
@@ -76,7 +76,7 @@ all:
     kafka_broker_custom_properties:
       num.io.threads: 15
       offsets.topic.num.partitions: 1
-      offsets.topic.replication.factor: 3
+      offsets.topic.replication.factor: 1
       confluent.balancer.enable: true
       # ssl.endpoint.identification.algorithm: 
       # zookeeper.ssl.endpoint.identification.algorithm: 
@@ -137,21 +137,21 @@ kafka_broker:
       # ldap.ssl.truststore.location: /var/path/kafka_broker.truststore.jks
       # ldap.ssl.truststore.password: my-truststore-password
       # ldap.java.naming.security.protocol: SSL
-      # ldap.java.naming.factory.initial: com.sun.jndi.ldap.LdapCtxFactory
-      #ldap.com.sun.jndi.ldap.read.timeout: 3000
-      #ldap.java.naming.provider.url: ldap://openldap:389
-      #ldap.java.naming.security.principal: cn=admin,dc=confluentdemo,dc=io
-      #ldap.java.naming.security.credentials: admin
-      #ldap.java.naming.security.authentication: simple
-      #ldap.search.mode: USERS
+      ldap.java.naming.factory.initial: com.sun.jndi.ldap.LdapCtxFactory
+      ldap.com.sun.jndi.ldap.read.timeout: 3000
+      ldap.java.naming.provider.url: ldap://openldap:389
+      ldap.java.naming.security.principal: cn=admin,dc=confluentdemo,dc=io
+      ldap.java.naming.security.credentials: admin
+      ldap.java.naming.security.authentication: simple
+      ldap.search.mode: USERS
       # adjust to meet the directory settings
-      #ldap.user.search.base: ou=users,dc=confluentdemo,dc=io
-      #ldap.user.object.class: inetOrgPerson
-      #ldap.user.name.attribute: uid
-      #ldap.user.memberof.attribute: memberOf
-      #ldap.user.search.filter: (objectClass=inetOrgPerson)
-      #ldap.user.search.scope: 2
-      # ldap.search.page.size: 1000
+      ldap.user.search.base: ou=users,dc=confluentdemo,dc=io
+      ldap.user.object.class: inetOrgPerson
+      ldap.user.name.attribute: uid
+      ldap.user.memberof.attribute: memberOf
+      ldap.user.search.filter: (objectClass=inetOrgPerson)
+      ldap.user.search.scope: 2
+      ldap.search.page.size: 1000
   hosts:
     kafka1:
   #  kafka2:
