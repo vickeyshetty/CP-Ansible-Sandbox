@@ -130,9 +130,9 @@ kafka_broker:
       listener.name.client.plain.sasl.server.callback.handler.class: io.confluent.security.auth.provider.ldap.LdapAuthenticateCallbackHandler
 
       ssl.principal.mapping.rules: "RULE:.*CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
-      # listener.name.client.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
-      # listener.name.broker.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
-      # listener.name.internal.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
+      listener.name.client.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
+      listener.name.broker.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
+      listener.name.internal.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
 
       # ldap.ssl.truststore.location: /var/path/kafka_broker.truststore.jks
       # ldap.ssl.truststore.password: my-truststore-password
