@@ -76,7 +76,7 @@ all:
     kafka_broker_custom_properties:
       num.io.threads: 15
       offsets.topic.num.partitions: 1
-      offsets.topic.replication.factor: 1
+      offsets.topic.replication.factor: 3
       confluent.balancer.enable: true
       # ssl.endpoint.identification.algorithm: 
       # zookeeper.ssl.endpoint.identification.algorithm: 
@@ -120,8 +120,8 @@ all:
 zookeeper:
   hosts:
     zookeeper1:
-  #  zookeeper2:
-  #  zookeeper3:
+    zookeeper2:
+    zookeeper3:
 
 kafka_broker:
   vars:
@@ -130,9 +130,9 @@ kafka_broker:
       listener.name.client.plain.sasl.server.callback.handler.class: io.confluent.security.auth.provider.ldap.LdapAuthenticateCallbackHandler
 
       ssl.principal.mapping.rules: "RULE:.*CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
-      listener.name.client.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
-      listener.name.broker.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
-      listener.name.internal.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
+#      listener.name.client.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
+#      listener.name.broker.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
+#      listener.name.internal.ssl.principal.mapping.rules: "RULE:CN=([a-zA-Z0-9_@]*),.*$/$1/L, DEFAULT"
 
       # ldap.ssl.truststore.location: /var/path/kafka_broker.truststore.jks
       # ldap.ssl.truststore.password: my-truststore-password
@@ -154,8 +154,8 @@ kafka_broker:
       ldap.search.page.size: 1000
   hosts:
     kafka1:
-  #  kafka2:
-  #  kafka3:
+    kafka2:
+    kafka3:
 
 #schema_registry:
 #  hosts:
