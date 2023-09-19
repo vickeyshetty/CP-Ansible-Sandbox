@@ -44,6 +44,7 @@ all:
     deployment_strategy: rolling
     kafka_broker_custom_properties:
       inter.broker.protocol.version: 3.5
+      log.message.format.version: 3.5
 
     ## LDAP Users
     mds_super_user: mds
