@@ -9,10 +9,10 @@ all:
     ssl_enabled: true
     ssl_mutual_auth_enabled: true
 
-    #    ssl_custom_certs: true
-        ssl_ca_cert_filepath: "/var/jenkins_home/certs/ca.crt"
-        ssl_signed_cert_filepath: "/var/jenkins_home/certs/server.crt"
-        ssl_key_filepath: "/var/jenkins_home/certs/server.pem"
+    # ssl_custom_certs: true
+    # ssl_ca_cert_filepath: "/var/jenkins_home/certs/ca.crt"
+    # ssl_signed_cert_filepath: "/var/jenkins_home/certs/server.crt"
+    # ssl_key_filepath: "/var/jenkins_home/certs/server.pem"
     # ssl_key_password: ""
     # regenerate_keystore_and_truststore: true
 
