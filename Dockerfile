@@ -25,7 +25,7 @@ RUN apt-get update && apt-get install -y \
 # Install Python packages
 RUN pip3 install --upgrade pip wheel && \
     pip3 install --upgrade cryptography cffi && \
-    pip3 install ansible-core==2.13 && \
+    pip3 install ansible-core==2.13.9 && \
     pip3 install mitogen jmespath && \
     pip3 install --upgrade pywinrm
 
