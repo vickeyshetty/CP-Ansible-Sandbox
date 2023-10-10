@@ -229,3 +229,24 @@ services:
      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
     command: "--config.file=/etc/prometheus/prometheus.yml"     
     container_name: prometheus
+
+  alertmanager:
+    image: prom/alertmanager
+    volumes:
+      - ./alertmanager:/etc/alertmanager
+    depends_on:
+     - prometheus
+    container_name: alertmanager   
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    ports:
+      - '9093:9093'
+
+  smtp:
+    image: namshi/smtp
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=25
+      - ALLOWED_HOSTS=*
+    ports:
+      - '1025:25'

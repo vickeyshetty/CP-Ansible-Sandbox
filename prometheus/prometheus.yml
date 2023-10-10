@@ -1,7 +1,7 @@
 global:
   # How frequently to scrape targets by default.
   # Default 15s
-  scrape_interval: 60s
+  scrape_interval: 30s
   # How frequently to evaluate rules.
   # Default 15s
   evaluation_interval: 15s
@@ -10,15 +10,14 @@ global:
   # Required because cp-demo is using cpu throttling, so let's leave enough time to fetch the metrics in particular for the first time as it needs to compile all rexps
   scrape_timeout: 30s
 
-# rule_files:
-#   - "alert.rules"
+rule_files:
+  - alert.rules.yml
 
-# alerting:
-#   alertmanagers:
-#     - scheme: http
-#       static_configs:
-#         - targets:
-#             - "alertmanager:9093"
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets:
+        - "alertmanager:9093"
 
 scrape_configs:
   - job_name: "prometheus"
