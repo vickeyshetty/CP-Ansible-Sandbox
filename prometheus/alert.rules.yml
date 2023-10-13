@@ -1,37 +1,36 @@
 groups:
-- name: CPU
+- name: Kafka
   rules:
   - alert: HighCpuLoad
-    expr: '(sum by (instance) (avg by (mode, instance) (rate(node_cpu_seconds_total{mode!="idle"}[2m]))) > 0.8) * on(instance) group_left (nodename) node_uname_info{nodename=~".+"}'
+    expr: rate(process_cpu_seconds_total[1m]) * 100 > 80
     for: 5m
     labels:
       severity: warning
     annotations:
-      summary: High CPU load (instance {{ $labels.instance }})
+      summary: High CPU load 
       description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
 
   - alert: KafkaBrokerDown
-    expr: up{kafka_broker_id=~".+"} == 0
+    expr: up{env="dev", instance=~"kafka(1|2|3).*", job="kafka-broker"} == 0
     for: 5m
     labels:
       severity: critical
     annotations:
       summary: "Kafka Broker Down"
-      description: "Kafka broker {{ $labels.kafka_broker_id }} is down."
-
+      description: "Kafka broker {{ $labels.hostname }} is down."
 
   - alert: ZooKeeperDown
-    expr: zk_server_state == 0
+    expr: up{env="dev", instance=~"zookeeper(1|2|3).*", job="zookeeper"} == 0
     for: 5m
     labels:
       severity: critical
     annotations:
       summary: "ZooKeeper Service Down"
-      description: "The ZooKeeper service is down or not responding."
+      description: "The ZooKeeper service {{ $labels.hostname }} is down."
 
 
   - alert: KafkaOfflinePartitions
-    expr: kafka_controller_offline_partitions > 0
+    expr: kafka_controller_kafkacontroller_offlinepartitionscount > 0
     for: 5m
     labels:
       severity: critical
@@ -41,11 +40,11 @@ groups:
 
 
   - alert: Under Replicated Partitions
-    expr: sum(kafka_server_replicamanager_underreplicatedpartitions{job="kafka"}) by (instance) > 0
+    expr: kafka_cluster_partition_underreplicated > 0
     for: 1m
     labels:
       severity: critical
     annotations:
-      summary: 'Broker {{ $labels.instance }} :: Replicas and Partitions :: {{ $value }} under replicated partitons'
-      description: 'Under-replicated partitions means that one or more replicas are not available. This is usually because a broker is down.  Restart the broker, and check for errors in the logs.'
+      summary: 'Broker {{ $labels.hostname }} :: Under replicated partitons'
+      description: 'Under-replicated partition in {{ $labels.job }} in topic {{ $labels.topic }}'
 

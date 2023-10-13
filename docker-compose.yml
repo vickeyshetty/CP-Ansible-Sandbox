@@ -226,7 +226,7 @@ services:
     depends_on:
      - kafka-lag-exporter
     volumes:
-     - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+     - ./prometheus/:/etc/prometheus/
     command: "--config.file=/etc/prometheus/prometheus.yml"     
     container_name: prometheus
 
