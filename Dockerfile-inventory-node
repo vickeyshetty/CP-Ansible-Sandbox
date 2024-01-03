@@ -27,6 +27,9 @@ RUN service ssh start
 # Expose SSH port
 EXPOSE 22
 
+# Install utility tools
+RUN apt-get install -y vim net-tools netcat less
+
 # Run SSH service in the background and keep the container running
 # CMD [ "sh", "-c", "service ssh start; sleep infinity" ]
 

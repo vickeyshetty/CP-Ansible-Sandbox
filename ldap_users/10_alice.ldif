@@ -1,0 +1,9 @@
+dn: cn=alice,ou=users,{{ LDAP_BASE_DN }}
+objectClass: organizationalPerson
+objectClass: sambaSamAccount
+uid: alice
+sn: LookingGlass
+cn: alice
+displayName: Alice
+sambaSID: 10000
+userPassword: alice-secret

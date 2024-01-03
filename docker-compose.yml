@@ -1,22 +1,37 @@
 version: '3'
 
 services:
-  ansible-control:
-    build:
-      context: . 
-      dockerfile: Dockerfile
-    hostname: ansible-control
-    volumes:
-      - ./cp-ansible:/ansible/ansible_collections/confluent/platform:rw
-      - ./inventories:/ansible/inventories
-      - ./share:/usr/share/cp-ansible-sandbox
+#  ansible-control:
+#    build:
+#      context: . 
+#      dockerfile: Dockerfile
+#    hostname: ansible-control
+#    volumes:
+#      - ./cp-ansible:/ansible/ansible_collections/confluent/platform:rw
+#      - ./inventories:/ansible/inventories
+#      - ./share:/usr/share/cp-ansible-sandbox
+#    environment:
+#      - ANSIBLE_GATHERING=smart
+#      - ANSIBLE_HOST_KEY_CHECKING=False
+#      - ANSIBLE_RETRY_FILES_ENABLED=False
+#      - ANSIBLE_COLLECTIONS_PATH=/ansible/ansible_collections
+#      - ANSIBLE_SSH_PIPELINING=True
+#      - ANSIBLE_INVENTORY=/ansible/inventories/ansible-inventory.yml
+
+  openldap:
+    image: osixia/openldap:1.3.0
+    hostname: openldap
+    container_name: openldap
+    ports:
+      - 389:389
     environment:
-      - ANSIBLE_GATHERING=smart
-      - ANSIBLE_HOST_KEY_CHECKING=False
-      - ANSIBLE_RETRY_FILES_ENABLED=False
-      - ANSIBLE_COLLECTIONS_PATH=/ansible/ansible_collections
-      - ANSIBLE_SSH_PIPELINING=True
-      - ANSIBLE_INVENTORY=/ansible/inventories/ansible-inventory.yml
+        LDAP_ORGANISATION: "ConfluentDemo"
+        LDAP_DOMAIN: "confluentdemo.io"
+        LDAP_BASE_DN: "dc=confluentdemo,dc=io"
+    volumes:
+        - ./ldap_users:/container/service/slapd/assets/config/bootstrap/ldif/custom
+    command: "--copy-service --loglevel debug"
+
   zookeeper1:
     build:
       context: ./  # This is the directory where your Dockerfile-inventory-node resides
@@ -88,6 +103,7 @@ services:
       - "2225:22"
     volumes:
       - ./share:/usr/share/cp-ansible-sandbox
+      - ./certs:/var/ssl/private
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
     tmpfs:
       - /run/lock
@@ -135,6 +151,26 @@ services:
     environment:
       - DEBIAN_FRONTEND=non-interactive
 
+        #  schema-registry:
+        #    build:
+        #      context: ./  # This is the directory where your Dockerfile-inventory-node resides
+        #      dockerfile: Dockerfile-inventory-node  # This is the name of your Dockerfile
+        #    hostname: schema-registry
+        #    privileged: true
+        #    cap_add:
+        #      - ALL
+        #    ports:
+        #      - "2229:22"
+        #    volumes:
+        #      - ./share:/usr/share/cp-ansible-sandbox
+        #      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        #    tmpfs:
+        #      - /run/lock
+        #      - /run
+        #      - /tmp
+        #    environment:
+        #      - DEBIAN_FRONTEND=non-interactive
+
   control-center:
     build:
       context: ./  # This is the directory where your Dockerfile-inventory-node resides
@@ -155,3 +191,62 @@ services:
       - /tmp:exec,mode=777
     environment:
       - DEBIAN_FRONTEND=non-interactive
+
+  kafka-lag-exporter:
+    image: seglo/kafka-lag-exporter:0.8.2
+    container_name: kafka-lag-exporter
+    ports:
+      - "8000:8000"
+    environment:
+      KAFKA_LAG_EXPORTER_LOG_LEVEL: INFO
+      KAFKA_LAG_EXPORTER_KAFKA_LOG_LEVEL: INFO
+      ROOT_LOG_LEVEL: INFO
+    volumes:
+      - ./kafka-lag-exporter:/opt/docker/conf
+      - ./certs:/opt/kafka/certs
+    command: "/opt/docker/bin/kafka-lag-exporter -Dconfig.file=/opt/docker/conf/application.conf -Dlogback.configurationFile=/opt/docker/conf/logback.xml"
+  
+  grafana:
+    image: "grafana/grafana"
+    ports:
+     - "3000:3000"
+    environment:
+      GF_PATHS_DATA: /var/lib/grafana
+      GF_SECURITY_ADMIN_PASSWORD: kafka
+    container_name: grafana
+    depends_on:
+     - prometheus
+    volumes:
+      - ./grafana:/etc/grafana/provisioning
+
+  prometheus:
+    image: "prom/prometheus"
+    ports:
+     - "9090:9090"
+    depends_on:
+     - kafka-lag-exporter
+    volumes:
+     - ./prometheus/:/etc/prometheus/
+    command: "--config.file=/etc/prometheus/prometheus.yml"     
+    container_name: prometheus
+
+  alertmanager:
+    image: prom/alertmanager
+    volumes:
+      - ./alertmanager:/etc/alertmanager
+    depends_on:
+     - prometheus
+    container_name: alertmanager   
+    command:
+      - '--config.file=/etc/alertmanager/alertmanager.yml'
+    ports:
+      - '9093:9093'
+
+  smtp:
+    image: namshi/smtp
+    environment:
+      - SERVER_HOST=0.0.0.0
+      - SERVER_PORT=25
+      - ALLOWED_HOSTS=*
+    ports:
+      - '1025:25'

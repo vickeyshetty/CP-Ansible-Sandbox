@@ -1,0 +1,50 @@
+groups:
+- name: Kafka
+  rules:
+  - alert: HighCpuLoad
+    expr: rate(process_cpu_seconds_total[1m]) * 100 > 80
+    for: 5m
+    labels:
+      severity: warning
+    annotations:
+      summary: High CPU load 
+      description: "CPU load is > 80%\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
+
+  - alert: KafkaBrokerDown
+    expr: up{env="dev", instance=~"kafka(1|2|3).*", job="kafka-broker"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Kafka Broker Down"
+      description: "Kafka broker {{ $labels.hostname }} is down."
+
+  - alert: ZooKeeperDown
+    expr: up{env="dev", instance=~"zookeeper(1|2|3).*", job="zookeeper"} == 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "ZooKeeper Service Down"
+      description: "The ZooKeeper service {{ $labels.hostname }} is down."
+
+
+  - alert: KafkaOfflinePartitions
+    expr: kafka_controller_kafkacontroller_offlinepartitionscount > 0
+    for: 5m
+    labels:
+      severity: critical
+    annotations:
+      summary: "Kafka Offline Partitions Detected"
+      description: "There are offline partitions in the Kafka cluster."
+
+
+  - alert: Under Replicated Partitions
+    expr: kafka_cluster_partition_underreplicated > 0
+    for: 1m
+    labels:
+      severity: critical
+    annotations:
+      summary: 'Broker {{ $labels.hostname }} :: Under replicated partitons'
+      description: 'Under-replicated partition in {{ $labels.job }} in topic {{ $labels.topic }}'
+
